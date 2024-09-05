@@ -1,0 +1,118 @@
+Project Title: SQL Data Analysis for Films data
+
+Project Description:
+In this project, I will apply my SQL skills to analyze the "Films_data" database,
+which contains information related to films details, peoples, reviews and roles.
+The project will cover data retrieval, filtering, aggregation, and data joining, aligning with the syllabus you provided.
+
+Project Objectives:
+Apply SQL queries for data retrieval and analysis.
+Gain practical experience in using SQL for real-world data analysis.
+Develop an understanding of SQL data manipulation techniques.
+Combine data from multiple tables using SQL joins.
+
+--FILMS TABLES --
+
+--Q1 10 HIGHEST GROSSING FILM AND RELEASE
+
+--SELECT release_year, 
+		      gross
+FROM films
+where gross is not null
+order by gross desc
+limit 10
+
+--Q2 HOW MANY FILMS IN THE DATABASE WERE RELEASE IN EACH COUNTRY, AND WAHT ARE THE TOP 5 COUNTRY
+
+SELECT country,
+	     count(release_year) AS release_count
+FROM films
+group by country 
+order by count(release_year) desc
+limit 5
+
+--Q3 HOW MANY FILMS ARE AVAILABLE IN EACH LANGUAGE AND WHAT ARE THE TOP 3 LANGUAGE PRESENTED
+
+SELECT language,
+         count(language)
+FROM films
+group by language
+order by count(language) desc
+limit 3
+
+--Q4 WHAT IS THE AVERAGE IMDb SCORE FOR FILMS IN THE DATABASE
+
+SELECT avg(imdb_score) as avg_imdb_score
+FROM reviews
+
+--Q5 WHICH COUNTRY HAS MADE THE HGHEST PROFIT FROM MOVIE?
+
+SELECT country,
+		    avg(gross)
+FROM films
+where gross is not null
+group by country
+order by avg(gross) desc
+limit 1
+
+--Q6 WHICH MOVIE MADE THE HIGHEST PROFIT IN THE 21ST CENTURY
+
+SELECT title, release_year, gross
+FROM films
+where release_year >= 2001 and 
+      gross is not null
+order by gross desc
+limit 1
+
+--Q7 HOW MANY PEOPLE IN THE DATABASE ARE STILL ALIVE (BASED ON THE BIRTHDATE AND DEATH DATE)
+
+select count(birthdate) as birth_count,  
+        count(birthdate) as death_count
+from people
+where deathdate is null and birthdate is not null
+
+--Q8 WHICH YEAR HAS THE HIGHEST NUMBER OF MOVIE RELEASE
+
+select release_year, 
+        count(release_year) as number_of_movie
+from films
+where release_year is not null
+group by release_year
+order by count(release_year) desc
+limit 1
+
+-- PEOPLE AND ROLE TABLES --
+
+--Q9 DETERMINE THE TOP 10 PEOPLE WITH THE MOST ROLE IN THE DATABASE
+
+select name,
+        role
+from people
+full join roles
+on people.id = roles.id
+limit 10
+
+--USER REVIEWS AND VOTES TABLES --
+--Q10 CALCULATE THE AVERAGE NUMBER OF USER AND REVIEWS FOR FILMS
+
+SELECT avg(num_user)as average_number,
+        avg(num_votes)review_number
+FROM REVIEWS
+
+--Q11 IDENTIFY FILMS WITH THE HIGHEST NUMBER OF USER AND CRITIC REVIEWS
+
+SELECT max(num_user) as highest_user,
+        max(num_critic) as highest_critic
+from reviews
+where num_user is not null
+order by max(num_user) 
+
+--Q12 WHICH FILMS HAVE THE MOST FACEBOOK LIKES AND IS THERE CORRELATION WITH THEIR IMDb SCORE
+
+SELECT facebook_likes,
+        (imdb_score)
+FROM reviews
+order by facebook_likes desc
+limit 1
+
+
